@@ -1,0 +1,42 @@
+server:
+  port: 8181
+  
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url: 
+      defaultZone: http://localhost:8761/eureka/
+      
+zuul:
+  #prefix: /api
+  ignoredServices: '*'
+  #sensitive-headers: Authorization
+  host:
+    connect-timeout-millis: 60000
+    socket-timeout-millis: 60000
+    connection-request-timeout-millis: 60000
+  routes:
+    auth-routes:
+      path: /auth/**
+      service-id: oauth-user-ms
+      stripPrefix: true
+    user-routes:
+      path: /users/**
+      service-id: oauth-user-ms
+      strip-prefix: false
+      
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-value:
+          -----BEGIN PUBLIC KEY-----
+          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl+lQnJRDoCfh+PDer+cp
+          bhZ1Z+h01xsErfoCsvrG6BLMBcutiIjrjUehytuHcEWX26D/b5IO0i2Q9oPFywPQ
+          be3XjoypQP1cJ/+C9iBEf7mxmfg93U/9t4mrDbcUdcStUdcskYYvNgbTbg0lIMMg
+          XjIRBVZiNhuGh0wFYIVjagm4qKxFfzK8fMm80NxAhYkAV5lIWqzq3BogP+pEEtLt
+          GpwHn4fI7C5g7FC7kjupECa68VUuWXuzhDvfPeLdUCJVw0nkvzyMi4Q0/tuNFRYd
+          MvWQLrXl/L2Z8weyy6GTuFrmG8WMsMbAGbJvicM+PPLBvy6ovThisX9RIH2vwone
+          BQIDAQAB
+          -----END PUBLIC KEY-----

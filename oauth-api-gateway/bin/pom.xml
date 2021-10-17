@@ -95,7 +95,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>oauth-api-gateway</finalName>
 	</build>
 
 </project>

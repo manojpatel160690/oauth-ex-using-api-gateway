@@ -108,6 +108,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>oauth-user-ms</finalName>
 	</build>
 
 </project>

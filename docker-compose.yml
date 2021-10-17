@@ -1,0 +1,19 @@
+version: '3'
+services:
+  oauth-registry-ms:
+    image: oauth-registry-ms:1.0.0
+    ports:
+     - "8761:8761"
+  oauth-user-ms:
+    image: oauth-user-ms:1.0.0
+    depends_on:
+     - oauth-registry-ms
+    deploy:
+      mode: replicated
+      replicas: 2
+  oauth-api-gateway:
+    image: oauth-api-gateway:1.0.0
+    depends_on:
+     - oauth-registry-ms
+    ports:
+     - "9090:9090"

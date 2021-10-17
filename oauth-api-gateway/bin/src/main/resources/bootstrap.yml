@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: oauth-api-gateway
+
+zuul:
+  sensitiveHeaders: Cookie,Set-Cookie
+ribbon:
+  ConnectTimeout: 120000
+  ReadTimeout: 120000
