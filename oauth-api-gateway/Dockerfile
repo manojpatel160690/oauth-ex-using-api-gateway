@@ -1,6 +1,5 @@
 FROM openjdk:11
-#EXPOSE 8081
+#ARG JAR_FILE=target/oauth-api-gateway.jar
 ADD target/oauth-api-gateway.jar oauth-api-gateway.jar
-# environment variable with default value
-#ENV SPRING_PROFILE=dev "-Dspring.profiles.active=${SPRING_PROFILE}",
+EXPOSE 9090
 ENTRYPOINT ["java", "-jar", "oauth-api-gateway.jar"]

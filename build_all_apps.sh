@@ -1,0 +1,1 @@
+exec mvn clean compile package -DskipTests

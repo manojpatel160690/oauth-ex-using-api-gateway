@@ -1,6 +1,5 @@
 FROM openjdk:11
-#EXPOSE 8081
+#ARG target/oauth-user-ms.jar
 ADD target/oauth-user-ms.jar oauth-user-ms.jar
-# environment variable with default value
-#ENV SPRING_PROFILE=dev "-Dspring.profiles.active=${SPRING_PROFILE}",
 ENTRYPOINT ["java", "-jar", "oauth-user-ms.jar"]
+EXPOSE 9002

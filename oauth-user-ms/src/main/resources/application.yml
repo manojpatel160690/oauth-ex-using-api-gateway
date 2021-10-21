@@ -1,14 +1,14 @@
 server:
-  port: ${server_port:9098}
+  port: ${SERVER_PORT:9002}
 
 spring:
-  datasource:    url: ${USER.MS.DATABASE.URL:jdbc:h2:mem:usermsdb}
-    username: ${USER.MS.DATABASE.USERNAME:sa}
-    password: ${USER.MS.DATABASE.PASSWORD:}
-    driver-class-name: ${USER.MS.DATABASE.DRIVER-CLASS-NAME:org.h2.Driver}
+  datasource:    url: ${USER_MS_DATABASE_URL:jdbc:h2:mem:usermsdb}
+    username: ${USER_MS_DATABASE_USERNAME:sa}
+    password: ${USER_MS_DATABASE_PASSWORD:}
+    driver-class-name: ${USER_MS_DATABASE_DRIVER_CLASS_NAME:org.h2.Driver}
   jpa:
     properties:      hibernate:
-        dialect: ${USER.MS.DATABASE.DIALECT:org.hibernate.dialect.H2Dialect}    hibernate:      ddl-auto: update
+        dialect: ${USER_MS_DATABASE_DIALECT:org.hibernate.dialect.H2Dialect}    hibernate:      ddl-auto: update
       naming:        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     generate-ddl: true
     show-sql: true
@@ -28,4 +28,4 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     serviceUrl:
-      defaultZone: ${eureka_url:http://oauth-registry-ms:8761/eureka/}
+      defaultZone: ${EUREKA_SERVER_ADDRESS:http://oauth-registry-ms:8761/eureka/}

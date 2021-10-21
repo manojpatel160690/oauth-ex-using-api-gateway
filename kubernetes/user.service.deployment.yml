@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-ms-cm
+data:
+  USER_MS_DATABASE_URL: jdbc:h2:file:D:/projects/database/userms/db
+  USER_MS_DATABASE_USERNAME: sa
+  USER_MS_DATABASE_DRIVER_CLASS_NAME: org.h2.Driver
+  USER_MS_DATABASE_DIALECT: org.hibernate.dialect.H2Dialect
+  eureka_service_address: http://eureka-0.eureka:8761/eureka
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oauth-user-ms-app
+  labels:
+    app: oauth-user-ms-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app : oauth-user-ms-app
+  template:
+    metadata:
+      labels:
+        app: oauth-user-ms-app
+    spec:
+      containers:
+      - name: oauth-user-ms-app
+        image: oauth-user-ms:1.0.0
+        imagePullPolicy: Never
+        ports:
+          - containerPort: 9002
+        env:
+          - name: USER_MS_DATABASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: user-ms-cm
+                key: USER_MS_DATABASE_URL
+          - name: USER_MS_DATABASE_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: user-ms-cm
+                key: USER_MS_DATABASE_USERNAME
+          - name: USER_MS_DATABASE_DRIVER_CLASS_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: user-ms-cm
+                key: USER_MS_DATABASE_DRIVER_CLASS_NAME
+          - name: USER_MS_DATABASE_DIALECT
+            valueFrom:
+              configMapKeyRef:
+                name: user-ms-cm
+                key: USER_MS_DATABASE_DIALECT
+          - name: EUREKA_SERVER_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: user-ms-cm
+                key: eureka_service_address
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name:  oauth-user-ms-svc
+spec:
+  selector:
+    app:  oauth-user-ms
+  ports:
+  - port:  80
+    targetPort:  9002

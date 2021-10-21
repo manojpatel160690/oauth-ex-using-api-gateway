@@ -1,12 +1,12 @@
 server:
-  port: ${server_port:9090}
+  port: ${SERVER_PORT:9191}
 
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url: 
-      defaultZone: ${eureka_url:http://oauth-registry-ms:8761/eureka/}
+      defaultZone: ${EUREKA_SERVER_ADDRESS:http://oauth-registry-ms:8761/eureka/}
       
 zuul:
   #prefix: /api
