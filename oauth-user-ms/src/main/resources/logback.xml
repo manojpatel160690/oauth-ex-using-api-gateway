@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<!-- <property name="env" value="${spring.profiles.active:-test}" />
+	
+	<if condition='property("env").equals("dev")'>
+		<then>
+			<property resource="logging-dev.properties" />	
+		</then>
+		<else>
+			<property resource="logging.properties" />
+		</else>
+	</if> -->
+	
+	<property resource="logging-dev.properties" />
+	
+	<variable name="logpath" value="${log.file.path}" />
+	<variable name="logfile" value="${log.file.name}" />
+	<variable name="archivepath" value="${log.file.archivepath}" />
+	<variable name="filesize" value="${log.file.size:-50MB}" />
+	<variable name="loglevel" value="${log.file.level}" />
+	
+
+	<appender name="STD_OUT" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread:%X{mdcRequestId}] %logger \(%line\) - %msg%n
+			</Pattern>
+		</layout>
+	</appender>
+
+	<appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logpath}/${logfile}.log</file>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread:%X{mdcRequestId}] %logger \(%line\) - %msg%n</Pattern>
+		</encoder>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- rollover daily and when the file reaches 10 MegaBytes -->
+			<fileNamePattern>${archivepath}/${logfile}-%d{yyyy-MM-dd}-%i.log
+			</fileNamePattern>
+			<maxFileSize>${filesize}</maxFileSize>
+		</rollingPolicy>
+	</appender>
+	
+	<appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logpath}/${logfile}-ERROR.log</file>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread:%X{mdcRequestId}] %logger \(%line\) - %msg%n</Pattern>
+		</encoder>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- rollover daily and when the file reaches 10 MegaBytes -->
+			<fileNamePattern>${archivepath}/${logfile}-ERROR-%d{yyyy-MM-dd}-%i.log
+			</fileNamePattern>
+			<maxFileSize>${filesize}</maxFileSize>
+		</rollingPolicy>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+	</appender>
+	
+	<logger name="com.oauth.user.ms" level="ERROR" additivity="false">
+		<appender-ref ref="ERROR_FILE" />
+	</logger>
+	
+	<logger name="com.oauth.user.ms" level="${loglevel}" additivity="false">
+		<appender-ref ref="LOG_FILE" />
+	</logger>
+	
+	<logger name="org.springframework" level="INFO" additivity="false">
+		<appender-ref ref="LOG_FILE" />
+	</logger>
+
+	<!-- LOG everything at INFO level -->
+	<root level="info">
+		<appender-ref ref="LOG_FILE" />
+		<appender-ref ref="STD_OUT" />
+	</root>
+
+</configuration>

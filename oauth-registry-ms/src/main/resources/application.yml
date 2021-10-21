@@ -6,8 +6,11 @@ spring:
     name: oauth-registry-ms
     
 eureka:
+  instance:
+    hostname: "${HOSTNAME}.eureka"
   client:
+    serviceUrl: 
+      defaultZone: ${EUREKA_SERVER_ADDRESS} 
     fetch-registry: false
     register-with-eureka: false
-  server:
-    enableSelfPreservation: false
+      

@@ -8,6 +8,9 @@ data:
   USER_MS_DATABASE_DRIVER_CLASS_NAME: org.h2.Driver
   USER_MS_DATABASE_DIALECT: org.hibernate.dialect.H2Dialect
   eureka_service_address: http://eureka-0.eureka:8761/eureka
+  USER_MS_LOG_PATH: D:/projects/logs/userms
+  USER_MS_LOG_FILE_NAME: userms
+  USER_MS_LOG_LEVEL: DEBUG
 
 ---
 
@@ -18,7 +21,7 @@ metadata:
   labels:
     app: oauth-user-ms-app
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app : oauth-user-ms-app
@@ -59,6 +62,21 @@ spec:
               configMapKeyRef:
                 name: user-ms-cm
                 key: eureka_service_address
+          - name: USER_MS_LOG_PATH
+            valueFrom:
+              configMapKeyRef:
+                name: user-ms-cm
+                key: USER_MS_LOG_PATH
+          - name: USER_MS_LOG_FILE_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: user-ms-cm
+                key: USER_MS_LOG_FILE_NAME
+          - name: USER_MS_LOG_LEVEL
+            valueFrom:
+              configMapKeyRef:
+                name: user-ms-cm
+                key: USER_MS_LOG_LEVEL
 
 ---
 
@@ -68,7 +86,7 @@ metadata:
   name:  oauth-user-ms-svc
 spec:
   selector:
-    app:  oauth-user-ms
+    app:  oauth-user-ms-app
   ports:
   - port:  80
     targetPort:  9002
