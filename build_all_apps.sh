@@ -1,1 +1,1 @@
-exec mvn clean compile package -DskipTests
+exec mvn clean compile install -DskipTests
