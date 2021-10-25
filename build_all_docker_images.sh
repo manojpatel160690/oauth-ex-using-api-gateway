@@ -1,3 +1,5 @@
+eval $(minikube docker-env)
+
 cd oauth-registry-ms
 docker images
 docker build -t oauth-registry-ms:1.0.0 .

@@ -8,12 +8,14 @@ spring:
     driver-class-name: ${USER_MS_DATABASE_DRIVER_CLASS_NAME}
   jpa:
     properties:      hibernate:
-        dialect: ${USER_MS_DATABASE_DIALECT:org.hibernate.dialect.H2Dialect}    hibernate:      ddl-auto: update
+        dialect: ${USER_MS_DATABASE_DIALECT}
+        jdbc:
+          lob:
+            non_contextual_creation: true
+            hibernate:      ddl-auto: update
       naming:        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     generate-ddl: true
     show-sql: true
-  h2:    console:      enabled: true
-      path: /h2-console
       
 oauth:
   validityInSeconds:

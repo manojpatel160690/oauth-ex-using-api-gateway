@@ -6,9 +6,9 @@ metadata:
     app: postgres
 data:
   POSTGRES_DB_HOST_NAME: postgres
-  POSTGRES_DB_USER_MS: user-db
+  POSTGRES_DB_USER_MS: userdb
   POSTGRES_DB_DRIVER_CLASS_NAME: org.postgresql.Driver
-  POSTGRES_DB_HIBERNATE_DATABASE_DIALECT: org.hibernate.dialect.H2Dialect
+  POSTGRES_DB_HIBERNATE_DATABASE_DIALECT: org.hibernate.dialect.PostgreSQL82Dialect
 
 ---
 
@@ -17,93 +17,25 @@ kind: Secret
 metadata:
   name: postgres-db-credentials
 data:
-  POSTGRES_DB_USERNAME: cG9zdGdyZXNhZG1pbg== #postgresadmin
-  POSTGRES_DB_PASSWORD: cG9zdGdyZXNhZG1pbkAxMjM= #postgresadmin@123
- 
---- 
+  POSTGRES_USERNAME: cG9zdGdyZXM=
+  POSTGRES_PASSWORD: cG9zdGdyZXM=
 
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: postgres-pv-volume
-  labels:
-    type: local
-    app: postgres
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteMany
-  hostPath:
-    path: "/mnt/data"
 ---
 
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
   name: postgres-pv-claim
   labels:
     app: postgres
+    tier: database
 spec:
-  storageClassName: manual
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
-      
----
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: postgres
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app : postgres
-  template:
-    metadata:
-      labels:
-        app: postgres
-    spec:
-      containers:
-        - name: postgres
-          image: postgres
-          imagePullPolicy: "IfNotPresent"
-          ports:
-            - containerPort: 5432
-          env:
-            - name: POSTGRES_DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-db-credentials
-                  key: POSTGRES_DB_USERNAME
-            - name: POSTGRES_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-db-credentials
-                  key: POSTGRES_DB_PASSWORD
-            - name: POSTGRES_DB_HOST_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-config
-                  key: POSTGRES_DB_HOST_NAME
-            - name: POSTGRES_DB_USER_MS
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-config
-                  key: POSTGRES_DB_USER_MS
-          volumeMounts:
-            - mountPath: /var/lib/postgresql/data
-              name: user-db
-      volumes:
-        - name: user-db
-          persistentVolumeClaim:
-            claimName: postgres-pv-claim
-            
 ---
 
 apiVersion: v1
@@ -112,9 +44,11 @@ metadata:
   name: postgres
   labels:
     app: postgres
+    tier: database
 spec:
-  type: NodePort
   ports:
-   - port: 5432
+    - port: 5432
   selector:
-   app: postgres
+    app: postgres
+    tier: database
+  clusterIP: None

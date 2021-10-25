@@ -28,7 +28,10 @@ public class User {
 
 	@Id
 	@Column(name = "USR_USER_ID", nullable = false)
-	@GeneratedValue(generator = "user_id_generator", strategy = GenerationType.IDENTITY)
+	//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_generator_seq")
+	//@SequenceGenerator(name = "user_id_generator_seq", sequenceName = "user_id_generator_seq", allocationSize = 1, initialValue = 1)
+	//@GeneratedValue(strategy = GenerationType.AUTO, generator = "user_id_generator")
+	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "user_id_generator")
 	private long userId;
 	
 	@Column(name = "USR_EMAIL_ID", nullable = false, unique = true)

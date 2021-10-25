@@ -5,7 +5,7 @@ metadata:
   labels:
     app: oauth-user-ms-app
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app : oauth-user-ms-app
@@ -17,7 +17,7 @@ spec:
       containers:
       - name: oauth-user-ms-app
         image: oauth-user-ms:1.0.0
-        imagePullPolicy: Never
+        imagePullPolicy: "Never"
         ports:
           - containerPort: 9002
         env:
@@ -35,12 +35,12 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: postgres-db-credentials
-                key: POSTGRES_DB_USERNAME
+                key: POSTGRES_USERNAME
           - name: USER_MS_DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: postgres-db-credentials
-                key: POSTGRES_DB_PASSWORD
+                key: POSTGRES_PASSWORD
           - name: USER_MS_DATABASE_DRIVER_CLASS_NAME
             valueFrom:
               configMapKeyRef:
